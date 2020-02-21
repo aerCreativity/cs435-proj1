@@ -1,0 +1,25 @@
+/*
+ * Author: Simon Lam
+ * Part of CS435 Project 1.
+ * Permission to post to Github granted by professor.
+ * 
+ * Binary Search Tree
+ * Recursive Implementation
+ */
+
+/* Assumptions made:
+ * -The binary search tree will only contain integer values.
+ * -The binary search tree should have all of its functions implemented in a recursive format, if possible.
+ * -Any helper functions should be made private.
+ */
+
+// Implementation of the Recursive binary search tree
+public class BSTRecusive {
+    
+}
+
+// Helper class to encapsulate Tree Nodes
+class TreeNode {
+    public TreeNode parent, left, right;
+    public int val;
+}
