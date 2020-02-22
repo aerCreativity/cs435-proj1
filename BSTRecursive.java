@@ -22,6 +22,43 @@ import java.util.*;
 
 // Implementation of the Recursive binary search tree
 public class BSTRecursive {
+    // Main method used to create sample input and output
+    public static void main(String[] args) {
+        // begin with a balanced array of [1-15]
+        Integer[] example = {8,4,12,2,6,10,14,1,3,5,7,9,11,13,15};
+        TreeNode exRoot = fromArray(example);
+        printArrRec(exRoot);
+        System.out.print("\n");
+
+        // Add values from 16-32
+        for(int i=16; i<32; i++) {
+            insertRec(exRoot,i);
+        }
+        printArrRec(exRoot);
+        System.out.print("\n");
+
+        // Remove all odd values
+        for(int i=1; i<32; i+=2) {
+            deleteRec(exRoot,i);
+        }
+        printArrRec(exRoot);
+        System.out.print("\n");
+
+        // Find and print the max and min
+        int min = findMinRec(exRoot).val;
+        int max = findMaxRec(exRoot).val;
+        System.out.println("Max: "+max+", Min: "+min);
+
+        // Print the value larger than 12
+        System.out.println(findNextRec(exRoot,12));
+        // Print the value less than 12
+        System.out.println(findPrevRec(exRoot,12));
+        // Print the value greater than max
+        System.out.println(findNextRec(exRoot,max));
+        // Print the value smaller than min
+        System.out.println(findPrevRec(exRoot,min));
+    }
+
     // Function to change an integer array into a tree
     //  The array will be inputted as an inorder traversal
     //   index 0 will be root
@@ -29,7 +66,7 @@ public class BSTRecursive {
     //   etc.
     // Assumption: any array inputted will be a valid tree.
     //             arr.length>0
-    public TreeNode fromArray(Integer[] arr) {
+    public static TreeNode fromArray(Integer[] arr) {
         // Create the root node from the base array
         TreeNode root = new TreeNode(arr[0]);
         // Create a queue of nodes which have not yet been checked for children
@@ -75,7 +112,7 @@ public class BSTRecursive {
 
     // Recursive function to insert a value into a tree.
     // O(s) where s is size of the tree
-    public void insertRec(TreeNode root, int val) {
+    public static void insertRec(TreeNode root, int val) {
         if(root == null)
             return;
 
@@ -97,7 +134,8 @@ public class BSTRecursive {
     }
 
     // Recursive function to delete a value from a tree.
-    public void deleteRec(TreeNode root, int val) {
+    // O(s) where s is the size of the tree
+    public static void deleteRec(TreeNode root, int val) {
         if(root == null)
             return;
         
@@ -121,9 +159,8 @@ public class BSTRecursive {
             } else if(findNextRec(root,val) != val) {
                 toSwap = searchVal(root,findNextRec(root,val));
             }
-
             swap(root,toSwap);
-            deleteRec(root, val);
+            deleteRec(toSwap, val);
             return;
         }
 
@@ -131,11 +168,12 @@ public class BSTRecursive {
         // clean up the parent of the node (if any)
         if(root.parent != null) {
             TreeNode curr = root.parent;
-            if(curr.val < val) {
+            if(curr.right != null && curr.right.val == val) {
                 curr.right = null;
             } else {
                 curr.left = null;
             }
+            root.parent = null;
         }
     }
 
@@ -143,7 +181,7 @@ public class BSTRecursive {
     // no assumption on whether val is in the tree
     // if no greater value can be found, val is returned
     // O(s) where s is the size of the tree
-    public int findNextRec(TreeNode root, int val) {
+    public static int findNextRec(TreeNode root, int val) {
         // base case
         if(root == null)
             return val;
@@ -158,7 +196,9 @@ public class BSTRecursive {
             } else {
                 return leftResult;
             }
-        } else if(root.right != null && root.right.val > val) {
+        // if we are at val, or if val is to the immediate right
+        //  or if we see a value larger than val
+        } else if(root.val == val || (root.right != null && root.right.val >= val)) {
             // we want to go through the right subtree
             return findNextRec(root.right, val);
         } else {
@@ -171,7 +211,7 @@ public class BSTRecursive {
     //  no assumption on whether val exists in tree
     //  if no lesser value can be found, val is returned
     // O(s) where s is the size of the tree
-    public int findPrevRec(TreeNode root, int val) {
+    public static int findPrevRec(TreeNode root, int val) {
         // base case
         if(root == null) 
             return val;
@@ -186,7 +226,9 @@ public class BSTRecursive {
             } else {
                 return rightResult;
             }
-        } else if(root.left != null && root.left.val < val) {
+        // if we are at val, or if val is to the immediate left
+        //  or if we see a value larger than val
+        } else if(root.val == val || (root.left != null && root.left.val <= val)) {
             // we want to go through the left subtree
             return findPrevRec(root.left, val);
         } else {
@@ -197,7 +239,7 @@ public class BSTRecursive {
 
     // Recursive function to find the smallest (leftmost) value within a tree.
     // O(s) where s is the size of the tree
-    public TreeNode findMinRec(TreeNode root) {
+    public static TreeNode findMinRec(TreeNode root) {
         // base case
         if(root.left == null)
             return root;
@@ -208,7 +250,7 @@ public class BSTRecursive {
 
     //Recursive function to find the largest (rightmost) value within a tree.
     // O(s) where s is the size of the tree
-    public TreeNode findMaxRec(TreeNode root) {
+    public static TreeNode findMaxRec(TreeNode root) {
         // base case
         if(root.right == null)
             return root;
@@ -219,7 +261,7 @@ public class BSTRecursive {
 
     // helper function to find a value in the tree
     // returns null if not found
-    private TreeNode searchVal(TreeNode root, int val) {
+    private static TreeNode searchVal(TreeNode root, int val) {
         if(root == null)
             return null;
 
@@ -237,10 +279,25 @@ public class BSTRecursive {
 
     // helper function to swap two nodes' values
     // it effectively swaps both nodes without using pointer shenanigans
-    private void swap(TreeNode a, TreeNode b) {
+    private static void swap(TreeNode a, TreeNode b) {
         int temp = b.val;
         b.val = a.val;
         a.val = temp;
+    }
+
+    // recursive function to print all values in the tree
+    //  uses preorder traversal
+    private static void printArrRec(TreeNode root) {
+        // base case
+        if(root == null)
+            return;
+        
+        // printing
+        System.out.print(root.val+"(");
+        printArrRec(root.left);
+        System.out.print(" ");
+        printArrRec(root.right);
+        System.out.print(")");
     }
 }
 
