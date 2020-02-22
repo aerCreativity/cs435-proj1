@@ -22,51 +22,30 @@ import java.util.*;
 
 // Implementation of the Recursive binary search tree
 public class BSTRecursive {
-    // Main method used to create sample input and output
-    public static void main(String[] args) {
-        // begin with a balanced array of [1-15]
-        Integer[] example = {8,4,12,2,6,10,14,1,3,5,7,9,11,13,15};
-        TreeNode exRoot = fromArray(example);
-        printArrRec(exRoot);
-        System.out.print("\n");
+    // See driver for an example
 
-        // Add values from 16-32
-        for(int i=16; i<32; i++) {
-            insertRec(exRoot,i);
+    // Function to change an unsorted integer array into a tree
+    //  Every inputted value should be unique in the array
+    public static TreeNode fromArray(int[] arr) {
+        // Create the root node from the first value
+        TreeNode root = new TreeNode(arr[0]);
+
+        // Loop through and add all the values to the tree using 'insert'
+        for(int i=1; i<arr.length; i++) {
+            insertRec(root,arr[i]);
         }
-        printArrRec(exRoot);
-        System.out.print("\n");
 
-        // Remove all odd values
-        for(int i=1; i<32; i+=2) {
-            deleteRec(exRoot,i);
-        }
-        printArrRec(exRoot);
-        System.out.print("\n");
-
-        // Find and print the max and min
-        int min = findMinRec(exRoot).val;
-        int max = findMaxRec(exRoot).val;
-        System.out.println("Max: "+max+", Min: "+min);
-
-        // Print the value larger than 12
-        System.out.println(findNextRec(exRoot,12));
-        // Print the value less than 12
-        System.out.println(findPrevRec(exRoot,12));
-        // Print the value greater than max
-        System.out.println(findNextRec(exRoot,max));
-        // Print the value smaller than min
-        System.out.println(findPrevRec(exRoot,min));
+        return root;
     }
 
-    // Function to change an integer array into a tree
+    // Function to change a sorted integer array into a tree
     //  The array will be inputted as an inorder traversal
     //   index 0 will be root
     //   index 1,2 will be children of root
     //   etc.
     // Assumption: any array inputted will be a valid tree.
     //             arr.length>0
-    public static TreeNode fromArray(Integer[] arr) {
+    public static TreeNode fromSortedArray(int[] arr) {
         // Create the root node from the base array
         TreeNode root = new TreeNode(arr[0]);
         // Create a queue of nodes which have not yet been checked for children
@@ -88,13 +67,13 @@ public class BSTRecursive {
             
             // check if each child is valid
             // if they're valid, create that child and add it to the queue
-            if(leftIndex<arr.length && arr[leftIndex]!=null) {
+            if(leftIndex<arr.length) {
                 TreeNode leftChild = new TreeNode(arr[leftIndex],currNode);
                 currNode.left = leftChild;
                 needsChildren.add(leftChild);
                 indeces.add(leftIndex);
             }
-            if(rightIndex<arr.length && arr[rightIndex]!=null) {
+            if(rightIndex<arr.length) {
                 TreeNode rightChild = new TreeNode(arr[rightIndex],currNode);
                 currNode.right = rightChild;
                 needsChildren.add(rightChild);
@@ -301,7 +280,7 @@ public class BSTRecursive {
 
     // recursive function to print all values in the tree
     //  uses preorder traversal
-    private static void printArrRec(TreeNode root) {
+    public static void printArrRec(TreeNode root) {
         // base case
         if(root == null)
             return;
@@ -312,22 +291,5 @@ public class BSTRecursive {
         System.out.print(" ");
         printArrRec(root.right);
         System.out.print(")");
-    }
-}
-
-// Helper class to encapsulate Tree Nodes
-class TreeNode {
-    public TreeNode parent, left, right;
-    public int val;
-    
-    // Constructor 
-    TreeNode(int v) {
-        val = v;
-    }
-    
-    // Override constructor to store parent node
-    TreeNode(int v, TreeNode p) {
-        val = v;
-        parent = p;
     }
 }

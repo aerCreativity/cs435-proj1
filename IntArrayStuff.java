@@ -9,7 +9,7 @@ import java.lang.Math;
 import java.util.HashSet;
 
 public class IntArrayStuff {
-    public int[] getRandomArray(int n) {
+    public static int[] getRandomArray(int n) {
         int[] arr = new int[n];
         HashSet<Integer> seenNum = new HashSet<>();
         for(int i=0; i<n; i++) {
@@ -20,10 +20,10 @@ public class IntArrayStuff {
             arr[i] = randInt;
             seenNum.add(randInt);
         }
-        return new int[n];
+        return arr;
     }
 
-    public int[] getSortedArray(int n) {
+    public static int[] getSortedArray(int n) {
         int[] arr = new int[n];
         for(int i=0; i<n; i++) {
             arr[i] = n-i;
