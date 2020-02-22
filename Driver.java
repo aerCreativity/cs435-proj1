@@ -12,7 +12,7 @@
         System.out.println("Sample Array (Unsorted)");
         printArr(example);
 
-        // Sort it.
+        // Give a sorted, descending array.
         int[] sorted = IntArrayStuff.getSortedArray(n);
         // Print test array
         System.out.println("Sample Array (Sorted)");

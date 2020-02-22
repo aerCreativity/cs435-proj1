@@ -9,10 +9,12 @@ import java.lang.Math;
 import java.util.HashSet;
 
 public class IntArrayStuff {
+    // Generates an array of length 'n' with unique positive integers
     public static int[] getRandomArray(int n) {
         int[] arr = new int[n];
         HashSet<Integer> seenNum = new HashSet<>();
         for(int i=0; i<n; i++) {
+            // Generate random number, and check if that number has been seen
             int randInt = (int)(Math.random()*n*n);
             while(seenNum.contains(randInt)) {
                 randInt = (int)(Math.random()*n*n);
@@ -23,6 +25,7 @@ public class IntArrayStuff {
         return arr;
     }
 
+    // Generates a descending array of size 'n' from 'n' to '1'
     public static int[] getSortedArray(int n) {
         int[] arr = new int[n];
         for(int i=0; i<n; i++) {
