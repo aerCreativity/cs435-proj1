@@ -155,9 +155,9 @@ public class BSTRecursive {
         if(root.left != null || root.right != null) {
             TreeNode toSwap = null;
             if(findPrevRec(root,val) != val) {
-                toSwap = searchVal(root,findPrevRec(root,val));
+                toSwap = searchValRec(root,findPrevRec(root,val));
             } else if(findNextRec(root,val) != val) {
-                toSwap = searchVal(root,findNextRec(root,val));
+                toSwap = searchValRec(root,findNextRec(root,val));
             }
             swap(root,toSwap);
             deleteRec(toSwap, val);
@@ -261,7 +261,7 @@ public class BSTRecursive {
 
     // helper function to find a value in the tree
     // returns null if not found
-    private static TreeNode searchVal(TreeNode root, int val) {
+    private static TreeNode searchValRec(TreeNode root, int val) {
         if(root == null)
             return null;
 
@@ -271,9 +271,9 @@ public class BSTRecursive {
         
         // otherwise, search the relevant subtree
         if(root.val > val) {
-            return(searchVal(root.left, val));
+            return(searchValRec(root.left, val));
         } else{
-            return(searchVal(root.right, val));
+            return(searchValRec(root.right, val));
         }
     }
 
