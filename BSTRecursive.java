@@ -110,6 +110,20 @@ public class BSTRecursive {
         return root;
     }
 
+    // From an unsorted array into a tree
+    //  print this using inorder traversal to make a list of sorted elements
+    public static TreeNode fromUnsorted(Integer[] arr) {
+        TreeNode root = new TreeNode(arr[0]);
+        for(int i=1; i<arr.length; i++) {
+            insertRec(root,arr[i]);
+        }
+
+        // we can print with preorder traversal
+        //printArrRec(root);
+
+        return root;
+    }
+
     // Recursive function to insert a value into a tree.
     // O(s) where s is size of the tree
     public static void insertRec(TreeNode root, int val) {

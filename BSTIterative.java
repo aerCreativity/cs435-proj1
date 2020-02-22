@@ -122,6 +122,17 @@ public class BSTIterative {
         return root;
     }
 
+    // From an unsorted array into a tree
+    //  print this using inorder traversal to make a list of sorted elements
+    public static TreeNode fromUnsorted(Integer[] arr) {
+        TreeNode root = new TreeNode(arr[0]);
+        for(int i=1; i<arr.length; i++) {
+            insertIter(root,arr[i]);
+        }
+
+        return root;
+    }
+
     // Iterative method of inserting an item into a BST
     public static void insertIter(TreeNode root, int val) {
         if(root == null) return;
