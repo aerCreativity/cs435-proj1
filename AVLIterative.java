@@ -74,7 +74,7 @@ public class AVLIterative {
     }
 
     // Helper that rotates left about the input node
-    public static void rotateLeft(TreeNode root) {
+    public static TreeNode rotateLeft(TreeNode root) {
         // The important nodes to keep track of are:
         //  (N)  current node
         //  (P)  current node's parent (if any)
@@ -83,7 +83,7 @@ public class AVLIterative {
 
         // if there is no right child, there is no rotation
         if(root == null || root.right == null) {
-            return;
+            return root;
         }
 
         // Grab references for each node so we can start moving pointers
@@ -105,7 +105,7 @@ public class AVLIterative {
         right.parent = parent;
 
         // check if we need to do a left-right rotation
-        if(right.countLeft > right.countRight) {
+        if(right.countLeft >= right.countRight) {
             rotateRight(right);
         }
 
@@ -123,10 +123,12 @@ public class AVLIterative {
         // update the values of the nodes
         curr.countRight = right.countLeft;
         right.countLeft = curr.countRight+curr.countLeft+1;
+
+        return right;
     }
 
     // Helper that rotates right about the input node
-    public static void rotateRight(TreeNode root) {
+    public static TreeNode rotateRight(TreeNode root) {
         // The important nodes to keep track of are:
         //  (N)  current node
         //  (P)  current node's parent (if any)
@@ -135,7 +137,7 @@ public class AVLIterative {
 
         // if there is no left child, we cannot rotate
         if(root == null || root.left == null) {
-            return;
+            return root;
         }
 
         // Grab references for each node so we can start moving pointers
@@ -157,7 +159,7 @@ public class AVLIterative {
         left.parent = parent;
 
         // Check if this has to be a right-left rotation
-        if(left.countRight > left.countLeft) {
+        if(left.countRight >= left.countLeft) {
             rotateLeft(left);
         }
 
@@ -175,5 +177,7 @@ public class AVLIterative {
         // update the values of the nodes
         curr.countLeft = left.countLeft;
         left.countRight = curr.countLeft+curr.countRight+1;
+
+        return left;
     }
 }

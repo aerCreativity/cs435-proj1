@@ -11,7 +11,26 @@
 public class AVLRecursive {
     // Insert a value, recursively
     public static void insertRec(TreeNode root, int val) {
-        //
+        // We need to see if we pick left or right
+        // Increase the count for the side we pass through, and see if we can insert
+        if(root.val > val) {
+            // Go left!
+            if(root.left == null) {
+                root.left = new TreeNode(val,root);
+                return;
+            }
+            insertRec(root.left, val);
+        } else if(root.val < val) {
+            // Go right!
+            if(root.right == null){
+                root.right = new TreeNode(val, root);
+                return;
+            }
+            insertRec(root.right, val);
+        } else {
+            // The node already exists...
+            return;
+        }
     }
 
     // Delete a value, recursively
@@ -45,8 +64,37 @@ public class AVLRecursive {
         return findMaxRec(root.right);
     }
 
+    // Helper that transforms an array into a tree
+    public static TreeNode fromArray(int[] arr) {
+        if(arr.length < 1) return null;
+        TreeNode root = new TreeNode(arr[0]);
+
+        // loop through, inserting all items
+        for(int i=1; i<arr.length; i++) {
+            insertRec(root,arr[i]);
+        }
+
+        return root;
+    }
+
+    // Helper that rebalances the tree, if need be.
+    //  It works by going up the tree from a leaf, and then rotating based on the Balance Factor
+    public static void rebalanceUpRec(TreeNode leaf) {
+        int diff = leaf.countRight-leaf.countLeft;
+        if(diff > 1){
+            rotateLeft(leaf);
+        } else if(diff < -1){
+            rotateRight(leaf);
+        }
+        
+        // recursive call to the parent, until we hit root
+        if(leaf.parent != null) {
+            rebalanceUpRec(leaf.parent);
+        }
+    }
+
     // Helper that rotates left about the input node
-    public static void rotateLeft(TreeNode root) {
+    public static TreeNode rotateLeft(TreeNode root) {
         // The important nodes to keep track of are:
         //  (N)  current node
         //  (P)  current node's parent (if any)
@@ -55,7 +103,7 @@ public class AVLRecursive {
 
         // if there is no right child, there is no rotation
         if(root == null || root.right == null) {
-            return;
+            return root;
         }
 
         // Grab references for each node so we can start moving pointers
@@ -77,7 +125,7 @@ public class AVLRecursive {
         right.parent = parent;
 
         // check if we need to do a left-right rotation
-        if(right.countLeft > right.countRight) {
+        if(right.countLeft >= right.countRight) {
             rotateRight(right);
         }
 
@@ -95,10 +143,12 @@ public class AVLRecursive {
         // update the values of the nodes
         curr.countRight = right.countLeft;
         right.countLeft = curr.countRight+curr.countLeft+1;
+
+        return right;
     }
 
     // Helper that rotates right about the input node
-    public static void rotateRight(TreeNode root) {
+    public static TreeNode rotateRight(TreeNode root) {
         // The important nodes to keep track of are:
         //  (N)  current node
         //  (P)  current node's parent (if any)
@@ -107,7 +157,7 @@ public class AVLRecursive {
 
         // if there is no left child, we cannot rotate
         if(root == null || root.left == null) {
-            return;
+            return root;
         }
 
         // Grab references for each node so we can start moving pointers
@@ -129,7 +179,7 @@ public class AVLRecursive {
         left.parent = parent;
 
         // Check if this has to be a right-left rotation
-        if(left.countRight > left.countLeft) {
+        if(left.countRight >= left.countLeft) {
             rotateLeft(left);
         }
 
@@ -147,5 +197,7 @@ public class AVLRecursive {
         // update the values of the nodes
         curr.countLeft = left.countLeft;
         left.countRight = curr.countLeft+curr.countRight+1;
+
+        return left;
     }
 }
