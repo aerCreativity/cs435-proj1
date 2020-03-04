@@ -12,10 +12,13 @@ import java.util.*;
 public class AVLIterative {
     // Insert an item, iteratively
     public static void insertIter(TreeNode root, int val) {
+        int counter = 0;    // counter for traversals, used for Q6
+
         // Create a stack of nodes traversed to reach the insertion point
         Deque<TreeNode> stack = new ArrayDeque<TreeNode>();
         TreeNode curr = root;
         while(curr != null) {
+            counter++;
             stack.addLast(curr);
             // traversal
             if(val < curr.val) {
@@ -39,7 +42,6 @@ public class AVLIterative {
         // update bf and height for current
         if(curr.left != null && curr.right != null) {
             curr.bf = curr.right.height - curr.left.height;
-
         }
 
         // we update all the values of heights and balance factors up the tree
@@ -53,15 +55,19 @@ public class AVLIterative {
             }
             curr = stack.removeLast();
         }
+
+        System.out.println("Insertion done with "+counter+" traversals!");
     }
 
     // Delete an item, iteratively
     public static void deleteIter(TreeNode root, int val) {
+        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return;
 
         // find the node we want to delete
         TreeNode curr = root;
         while(curr != null) {
+            counter++;
             // traversal
             if(val < curr.val) {
                 curr = curr.left;
@@ -113,20 +119,26 @@ public class AVLIterative {
             }
             parent = parent.parent;
         }
+
+        System.out.println("Deletion done with "+counter+" traversals!");
     }
 
     // Iterative way of finding the next largest value from 'val'
     public static TreeNode findNextIter(TreeNode root, int val) {
+        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return null;
         TreeNode curr = root;
         // Let's look to the right for a number larger than val
         while(curr.val <= val) {
+            counter++;
             // If there's no larger value in our tree
             if(curr.right == null)
                 return null;
             curr = curr.right;
         }
         
+        System.out.println("Search done with "+counter+" traversals!");
+
         // Let's look for the smallest number that still fits
         //  NOTE: This is not a recursive call!
         return findMinIter(curr);
@@ -134,15 +146,19 @@ public class AVLIterative {
 
     // Iterative way of finding the next smallest value from 'val'
     public static TreeNode findPrevIter(TreeNode root, int val) {
+        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return null;
         TreeNode curr = root;
         // Let's look to the left for a number smaller than val
         while(curr.val >= val) {
+            counter++;
             // If there's no smaller value that fits
             if(curr.left == null)
                 return null;
             curr = curr.left;
         }
+
+        System.out.println("Search done with "+counter+" traversals!");
 
         // Let's return the largest number of that subtree
         //  NOTE: This is not a recursive call!
@@ -152,20 +168,32 @@ public class AVLIterative {
     // Iterative way of finding the minimum in a tree
     //  Finds the leftmost value
     public static TreeNode findMinIter(TreeNode root) {
+        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return root;
         TreeNode curr = root;
-        while(curr.left != null)
+        while(curr.left != null) {
+            counter++;
             curr = curr.left;
+        }
+
+        System.out.println("Search done with "+counter+" traversals!");
+
         return curr;
     }
 
     // Iterative way of finding the maximum in a tree
     //  Finds the rightmost value
     public static TreeNode findMaxIter(TreeNode root) {
+        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return root;
         TreeNode curr = root;
-        while(curr.right != null)
+        while(curr.right != null) {
+            counter++;
             curr = curr.right;
+        }
+        
+        System.out.println("Search done with "+counter+" traversals!");
+
         return curr;
     }
 

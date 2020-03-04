@@ -102,11 +102,13 @@ public class BSTIterative {
 
     // Iterative method of inserting an item into a BST
     public static void insertIter(TreeNode root, int val) {
+        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return;
         
         TreeNode curr = root;
         // Traverse until we find an appropriate empty spot
         while(curr.left != null || curr.right != null) {
+            counter++;
             if(curr.val < val && curr.right != null) {
                 curr = curr.right;
             } else if(curr.val > val && curr.left != null) {
@@ -127,11 +129,15 @@ public class BSTIterative {
         } else {
             curr.left = newNode;
         }
+
+        System.out.println("Insertion done with "+counter+" traversals!");
     }
 
     // Iterative method of removing an item from a BST
     //  we swap the node we want to delete with the closest node (in value) and continue swapping until it has no children.
     public static void deleteIter(TreeNode root, int val) {
+        int counter = 0;    // counter for traversals, used for Q6
+
         if(root == null) return;
 
         // find the node we want to delete
@@ -140,6 +146,7 @@ public class BSTIterative {
         
         // swap with nearest node until we hit the bottom of the tree
         while(curr.left != null || curr.right != null) {
+            counter++;
             // find closest child
             TreeNode smaller = findPrevIter(curr,val);
             TreeNode larger = findNextIter(curr,val);
@@ -165,59 +172,81 @@ public class BSTIterative {
                 parent.left = null;
             }
         }
+
+        System.out.println("Deletion done with "+counter+" traversals!");
     }
 
     // Iterative way of finding the next largest value from 'val'
-    //  Note: returns a TreeNode and not an int
     public static TreeNode findNextIter(TreeNode root, int val) {
+        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return null;
         TreeNode curr = root;
         // Let's look to the right for a number larger than val
         while(curr.val <= val) {
+            counter++;
             // If there's no larger value in our tree
             if(curr.right == null)
                 return null;
             curr = curr.right;
         }
         
+        System.out.println("Search done with "+counter+" traversals!");
+
         // Let's look for the smallest number that still fits
+        //  NOTE: This is not a recursive call!
         return findMinIter(curr);
     }
 
     // Iterative way of finding the next smallest value from 'val'
-    //  Note: returns a TreeNode and not an int
     public static TreeNode findPrevIter(TreeNode root, int val) {
+        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return null;
         TreeNode curr = root;
         // Let's look to the left for a number smaller than val
         while(curr.val >= val) {
+            counter++;
             // If there's no smaller value that fits
             if(curr.left == null)
                 return null;
             curr = curr.left;
         }
 
+        System.out.println("Search done with "+counter+" traversals!");
+
         // Let's return the largest number of that subtree
+        //  NOTE: This is not a recursive call!
         return findMaxIter(curr);
     }
 
     // Iterative way of finding the minimum in a tree
     //  Finds the leftmost value
     public static TreeNode findMinIter(TreeNode root) {
+        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return root;
         TreeNode curr = root;
-        while(curr.left != null)
+        while(curr.left != null) {
+            counter++;
             curr = curr.left;
+        }
+
+        System.out.println("Search done with "+counter+" traversals!");
+
         return curr;
     }
 
     // Iterative way of finding the maximum in a tree
     //  Finds the rightmost value
     public static TreeNode findMaxIter(TreeNode root) {
+        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return root;
         TreeNode curr = root;
-        while(curr.right != null)
+        while(curr.right != null) {
+            counter++;
             curr = curr.right;
+        }
+        
+        System.out.println("Search done with "+counter+" traversals!");
+
         return curr;
     }
 
