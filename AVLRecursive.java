@@ -17,6 +17,7 @@ public class AVLRecursive {
             // Go left!
             if(root.left == null) {
                 root.left = new TreeNode(val,root);
+                recalculate(root);
                 return;
             }
             insertRec(root.left, val);
@@ -24,6 +25,7 @@ public class AVLRecursive {
             // Go right!
             if(root.right == null){
                 root.right = new TreeNode(val, root);
+                recalculate(root);
                 return;
             }
             insertRec(root.right, val);
@@ -35,7 +37,45 @@ public class AVLRecursive {
 
     // Delete a value, recursively
     public static void deleteRec(TreeNode root, int val) {
-        //
+        if(root == null)
+            return;
+        
+        // In the case that our root is not the value we want deleted.
+        if(root.val != val) {
+            if(root.val < val) {
+                deleteRec(root.right, val);
+            } else {
+                deleteRec(root.left, val);
+            }
+            return;
+        }
+
+        // In the case that the root has 1 or 2 children
+        // now, we have a tree where we want to delete the root.
+        //  we want to swap the root with the prev/next value and then remove it
+        if(root.left != null || root.right != null) {
+            TreeNode toSwap = null;
+            if(findPrevRec(root,val).val != val) {
+                toSwap = searchValRec(root,findPrevRec(root,val));
+            } else if(findNextRec(root,val).val != val) {
+                toSwap = searchValRec(root,findNextRec(root,val));
+            }
+            swap(root,toSwap);
+            deleteRec(toSwap, val);
+            return;
+        }
+
+        // In the case that our root has no children and should be deleted.
+        // clean up the parent of the node (if any)
+        if(root.parent != null) {
+            TreeNode curr = root.parent;
+            if(curr.right != null && curr.right.val == val) {
+                curr.right = null;
+            } else {
+                curr.left = null;
+            }
+            root.parent = null;
+        }
     }
 
     // Find the next greatest value
@@ -80,10 +120,9 @@ public class AVLRecursive {
     // Helper that rebalances the tree, if need be.
     //  It works by going up the tree from a leaf, and then rotating based on the Balance Factor
     public static void rebalanceUpRec(TreeNode leaf) {
-        int diff = leaf.countRight-leaf.countLeft;
-        if(diff > 1){
+        if(leaf.bf > 1){
             rotateLeft(leaf);
-        } else if(diff < -1){
+        } else if(leaf.bf < -1){
             rotateRight(leaf);
         }
         
@@ -125,7 +164,7 @@ public class AVLRecursive {
         right.parent = parent;
 
         // check if we need to do a left-right rotation
-        if(right.countLeft >= right.countRight) {
+        if(right.bf < 0) {
             rotateRight(right);
         }
 
@@ -140,9 +179,11 @@ public class AVLRecursive {
         }
         curr.parent = right;
 
-        // update the values of the nodes
-        curr.countRight = right.countLeft;
-        right.countLeft = curr.countRight+curr.countLeft+1;
+        // update heights and bfs of the nodes changed
+        // curr
+        recalculate(curr);
+        // right
+        recalculate(right);
 
         return right;
     }
@@ -179,7 +220,7 @@ public class AVLRecursive {
         left.parent = parent;
 
         // Check if this has to be a right-left rotation
-        if(left.countRight >= left.countLeft) {
+        if(left.bf > 0) {
             rotateLeft(left);
         }
 
@@ -195,9 +236,38 @@ public class AVLRecursive {
         curr.parent = left;
 
         // update the values of the nodes
-        curr.countLeft = left.countLeft;
-        left.countRight = curr.countLeft+curr.countRight+1;
+        // curr
+        recalculate(curr);
+        // left
+        recalculate(left);
 
         return left;
+    }
+
+    // Helper that recalculated balance for a TreeNode
+    private static void recalculate(TreeNode root) {
+        if(root.left != null && root.right != null) {
+            // we have two children
+            root.bf = root.right.height - root.left.height;
+            if(root.bf > 0) {
+                // right side is larger, use right height
+                root.height = root.right.height + 1;
+            } else {
+                // left side is larger
+                root.height = root.left.height + 1;
+            }
+        } else if(root.left != null) {
+            // we only have a left child
+            root.bf = 0 - root.left.height;
+            root.height = root.left.height + 1;
+        } else if(root.right != null) {
+            // we only have a right child
+            root.bf = root.right.height;
+            root.height = root.right.height + 1;
+        } else {
+            // we have no child
+            root.bf = 0;
+            root.height = 1;
+        }
     }
 }
