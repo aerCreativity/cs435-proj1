@@ -8,7 +8,8 @@ public class TreeNode {
     // Constructor 
     TreeNode(int v) {
         val = v;
-        height = 1;
+        parent = null;
+        height = 0;
     }
     
     // Override constructor to store parent node

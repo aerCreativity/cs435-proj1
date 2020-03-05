@@ -270,4 +270,29 @@ public class AVLRecursive {
             root.height = 1;
         }
     }
+
+    // helper function to find a value in the tree
+    // returns null if not found
+    private static TreeNode searchValRec(TreeNode root, TreeNode search) {
+        if(root == null)
+            return null;
+
+        // if we found it, return a reference
+        if(root.val == search.val)
+            return root;
+        
+        // otherwise, search the relevant subtree
+        if(root.val > search.val) {
+            return searchValRec(root.left, search);
+        } else{
+            return searchValRec(root.right, search);
+        }
+    }
+    
+    // Helper to swap two nodes
+    private static void swap(TreeNode a, TreeNode b) {
+        int temp = a.val;
+        a.val = b.val;
+        b.val = temp;
+    }
 }

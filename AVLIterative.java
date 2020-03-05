@@ -6,20 +6,32 @@
  * AVL Tree (Self-balancing)
  * Iterative Implementation
  */
-import java.util.*;
 
 // We will be using the same TreeNode class from before, but adding a "balance factor" value to the node
 public class AVLIterative {
+    private static int counter = 0;
+
+    // Create a tree from an array
+    public static TreeNode fromArray(int[] arr) {
+        System.out.println("Starting with "+arr[0]);
+        TreeNode root = new TreeNode(arr[0]);
+
+        for(int i=1; i<arr.length; i++) {
+            insertIter(root,arr[i]);
+        }
+
+        System.out.println("Creation done with "+counter+" traversals.");
+        return root;
+    }
+
     // Insert an item, iteratively
     public static void insertIter(TreeNode root, int val) {
-        int counter = 0;    // counter for traversals, used for Q6
-
-        // Create a stack of nodes traversed to reach the insertion point
-        Deque<TreeNode> stack = new ArrayDeque<TreeNode>();
+        // Find the insertion point
         TreeNode curr = root;
+        TreeNode lastCurr = null;
         while(curr != null) {
+            lastCurr = curr;
             counter++;
-            stack.addLast(curr);
             // traversal
             if(val < curr.val) {
                 curr = curr.left;
@@ -30,38 +42,32 @@ public class AVLIterative {
                 return;
             }
         }
+        // backtrack slightly
+        curr = lastCurr;
 
         // we insert the new node as a leaf
-        curr = stack.removeLast();
-        TreeNode newLeaf = new TreeNode(val, curr);
         // insert to the correct side of curr
         if(curr.val > val)
-            curr.left = newLeaf;
+            curr.left = new TreeNode(val, curr);
         else
-            curr.right = newLeaf;
-        // update bf and height for current
-        if(curr.left != null && curr.right != null) {
-            curr.bf = curr.right.height - curr.left.height;
-        }
+            curr.right = new TreeNode(val, curr);
 
         // we update all the values of heights and balance factors up the tree
         while(curr != null) {
             recalculate(curr);
+            //System.out.println("curr bf "+curr.bf);
             // check if we need to pivot
             if(curr.bf > 1) {
-                rotateLeft(curr);
+                curr = rotateLeft(curr);
             } else if(curr.bf < -1) {
-                rotateRight(curr);
+                curr = rotateRight(curr);
             }
-            curr = stack.removeLast();
+            curr = curr.parent;
         }
-
-        System.out.println("Insertion done with "+counter+" traversals!");
     }
 
     // Delete an item, iteratively
     public static void deleteIter(TreeNode root, int val) {
-        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return;
 
         // find the node we want to delete
@@ -119,13 +125,10 @@ public class AVLIterative {
             }
             parent = parent.parent;
         }
-
-        System.out.println("Deletion done with "+counter+" traversals!");
     }
 
     // Iterative way of finding the next largest value from 'val'
     public static TreeNode findNextIter(TreeNode root, int val) {
-        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return null;
         TreeNode curr = root;
         // Let's look to the right for a number larger than val
@@ -136,8 +139,6 @@ public class AVLIterative {
                 return null;
             curr = curr.right;
         }
-        
-        System.out.println("Search done with "+counter+" traversals!");
 
         // Let's look for the smallest number that still fits
         //  NOTE: This is not a recursive call!
@@ -146,7 +147,6 @@ public class AVLIterative {
 
     // Iterative way of finding the next smallest value from 'val'
     public static TreeNode findPrevIter(TreeNode root, int val) {
-        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return null;
         TreeNode curr = root;
         // Let's look to the left for a number smaller than val
@@ -158,8 +158,6 @@ public class AVLIterative {
             curr = curr.left;
         }
 
-        System.out.println("Search done with "+counter+" traversals!");
-
         // Let's return the largest number of that subtree
         //  NOTE: This is not a recursive call!
         return findMaxIter(curr);
@@ -168,7 +166,6 @@ public class AVLIterative {
     // Iterative way of finding the minimum in a tree
     //  Finds the leftmost value
     public static TreeNode findMinIter(TreeNode root) {
-        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return root;
         TreeNode curr = root;
         while(curr.left != null) {
@@ -176,23 +173,18 @@ public class AVLIterative {
             curr = curr.left;
         }
 
-        System.out.println("Search done with "+counter+" traversals!");
-
         return curr;
     }
 
     // Iterative way of finding the maximum in a tree
     //  Finds the rightmost value
     public static TreeNode findMaxIter(TreeNode root) {
-        int counter = 0;    // counter for traversals, used for Q6
         if(root == null) return root;
         TreeNode curr = root;
         while(curr.right != null) {
             counter++;
             curr = curr.right;
         }
-        
-        System.out.println("Search done with "+counter+" traversals!");
 
         return curr;
     }
@@ -211,42 +203,44 @@ public class AVLIterative {
         }
 
         // Grab references for each node so we can start moving pointers
-        TreeNode curr = root;
-        TreeNode parent = curr.parent;
-        TreeNode right = curr.right;
+        TreeNode parent = root.parent;
+        TreeNode right = root.right;
         TreeNode rightLeft = right.left;
 
+        // check if we need to do a left-right rotation
+        if(right.bf < 0) {
+            right = rotateRight(right);
+            rightLeft = right.left;
+        }
+
         // firstly, update the parent (if any) to point at the right node
-        if(parent != null) {
+        if(parent == null) {
+            right.parent = null;
+        } else {
             // Find if current is the left or right child
             // Case: left child
-            if(curr.val < parent.val) {
+            if(root == parent.left) {
                 parent.left = right;
             } else {
                 parent.right = right;
             }
-        }
-        right.parent = parent;
-
-        // check if we need to do a left-right rotation
-        if(right.bf < 0) {
-            rotateRight(right);
+            right.parent = parent;
         }
 
         // switch it so that:
         //  RL is the right child of N
         //  N is the left child of R
-        curr.right = rightLeft;
-        right.left = curr;
+        root.right = rightLeft;
+        right.left = root;
         // and update their respective parents
-        if(curr.right != null) {
-            curr.right.parent = curr;
+        if(root.right != null) {
+            root.right.parent = root;
         }
-        curr.parent = right;
+        root.parent = right;
 
         // update heights and bfs of the nodes changed
         // curr
-        recalculate(curr);
+        recalculate(root);
         // right
         recalculate(right);
 
@@ -267,42 +261,44 @@ public class AVLIterative {
         }
 
         // Grab references for each node so we can start moving pointers
-        TreeNode curr = root;
-        TreeNode parent = curr.parent;
-        TreeNode left = curr.left;
+        TreeNode parent = root.parent;
+        TreeNode left = root.left;
         TreeNode leftRight = left.right;
 
+        // Check if this has to be a right-left rotation
+        if(left.bf > 0) {
+            left = rotateLeft(left);
+            leftRight = left.right;
+        }
+
         // firstly, update the parent (if any) to point at the right node
-        if(parent != null) {
+        if(parent == null) {
+            left.parent = null;
+        } else {
             // Find if current is the left or right child
             // Case: left child
-            if(curr.val < parent.val) {
+            if(root.val < parent.val) {
                 parent.left = left;
             } else {
                 parent.right = left;
             }
-        }
-        left.parent = parent;
-
-        // Check if this has to be a right-left rotation
-        if(left.bf > 0) {
-            rotateLeft(left);
+            left.parent = parent;
         }
 
         // Switch it so that:
         //  LR is the left child of N
         //  N is the right child of L
-        curr.left = leftRight;
-        left.right = curr;
+        root.left = leftRight;
+        left.right = root;
         // and update their respective parents
-        if(curr.left != null) {
-            curr.left.parent = curr;
+        if(root.left != null) {
+            root.left.parent = root;
         }
-        curr.parent = left;
+        root.parent = left;
 
         // update the values of the nodes
         // curr
-        recalculate(curr);
+        recalculate(root);
         // left
         recalculate(left);
 

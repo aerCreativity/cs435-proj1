@@ -1,18 +1,21 @@
 /* This class is meant to run examples of each problem.
  */
 
- import java.util.concurrent.TimeUnit;
+ //import java.util.concurrent.TimeUnit;
 
  public class Driver {
     // Main method which runs the tests
     public static void main(String[] args) {
         // define size "n" of input arrays
         int n = 10000;
+        long startTime, newTime;
 
         // Problem 5 & 6:
         // Creating the large input arrays
         int[] arrRand = IntArrayStuff.getRandomArray(n);
         int[] arrSort = IntArrayStuff.getSortedArray(n);
+
+        //printArr(arrRand);
 
         // for random arr of input
         // recursive functions (commented out because of problem number 6)
@@ -20,17 +23,18 @@
         //TreeNode recAVL = AVLRecursive.fromArray(arrRand);
 
         // iterative functions
+        System.out.println("For n = "+n);
         System.out.println("++++++++++++++++++++++++++++++++++++++++++");
         System.out.println("Timing Iterative Implementation");
         System.out.println("on Random Array");
         System.out.println("++++++++++++++++++++++++++++++++++++++++++");
-        long startTime = System.nanoTime();
+        startTime = System.nanoTime();
         TreeNode itBST = BSTIterative.fromArray(arrRand);
-        long newTime = System.nanoTime();
+        newTime = System.nanoTime();
         System.out.println("[BST] Time Elapsed in nanoseconds: "+(newTime-startTime));
-        long startTime = System.nanoTime();
+        startTime = System.nanoTime();
         TreeNode itAVL = AVLIterative.fromArray(arrRand);
-        long newTime = System.nanoTime();
+        newTime = System.nanoTime();
         System.out.println("[AVL] Time Elapsed in nanoseconds: "+(newTime-startTime));
         
         // iterative functions
@@ -38,14 +42,15 @@
         System.out.println("Timing Iterative Implementation");
         System.out.println("on Sorted Array");
         System.out.println("++++++++++++++++++++++++++++++++++++++++++");
-        long startTime = System.nanoTime();
-        TreeNode itBST = BSTIterative.fromArray(arrSort);
-        long newTime = System.nanoTime();
+        startTime = System.nanoTime();
+        itBST = BSTIterative.fromArray(arrSort);
+        newTime = System.nanoTime();
         System.out.println("[BST] Time Elapsed in nanoseconds: "+(newTime-startTime));
-        long startTime = System.nanoTime();
-        TreeNode itAVL = AVLIterative.fromArray(arrSort);
-        long newTime = System.nanoTime();
+        startTime = System.nanoTime();
+        itAVL = AVLIterative.fromArray(arrSort);
+        newTime = System.nanoTime();
         System.out.println("[AVL] Time Elapsed in nanoseconds: "+(newTime-startTime));
+        
         
         /*
         // Create example array to test problems 1 and 4
@@ -182,7 +187,6 @@
         TreeNode exRoot = AVLRecursive.fromArray(example);
         int max, min;
         
-        AVLIterative.printArrIter(exRoot);
         System.out.print("\n");
         
         // Find and print the max and min
@@ -194,7 +198,6 @@
         for(int i=16; i<32; i++) {
             AVLRecursive.insertRec(exRoot,i);
         }
-        AVLRecursive.printArrRec(exRoot);
         System.out.print("\n");
         
         // Find and print the max and min
@@ -206,7 +209,6 @@
         for(int i=min; i<max; i+=2) {
             AVLRecursive.deleteRec(exRoot,i);
         }
-        AVLRecursive.printArrRec(exRoot);
         System.out.print("\n");
 
         // Find and print the max and min
@@ -227,7 +229,6 @@
         TreeNode exRoot = AVLIterative.fromArray(example);
         int max, min;
         
-        AVLIterative.printArrIter(exRoot);
         System.out.print("\n");
         
         // Find and print the max and min
@@ -239,7 +240,6 @@
         for(int i=16; i<32; i++) {
             AVLIterative.insertIter(exRoot,i);
         }
-        AVLIterative.printArrIter(exRoot);
         System.out.print("\n");
         
         // Find and print the max and min
@@ -251,7 +251,6 @@
         for(int i=min; i<max; i+=2) {
             AVLIterative.deleteIter(exRoot,i);
         }
-        AVLIterative.printArrIter(exRoot);
         System.out.print("\n");
 
         // Find and print the max and min
