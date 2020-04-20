@@ -60,7 +60,7 @@ public class AVLRecursive {
             } else if(findNextRec(root,val).val != val) {
                 toSwap = searchValRec(root,findNextRec(root,val));
             }
-            swap(root,toSwap);
+            TreeNode.swap(root,toSwap);
             deleteRec(toSwap, val);
             return;
         }
@@ -80,11 +80,38 @@ public class AVLRecursive {
 
     // Find the next greatest value
     public static TreeNode findNextRec(TreeNode root, int val) {
+        if(root.left == null){
+            if(root.val < val) {
+                return root;
+            } else if(root.right != null){
+                return findNextRec(root.right,val);
+            }
+        }
+        if(root.left.val < val) {
+            if(root.right != null) {
+                return findNextRec(root.right,val);
+            }
+        } else {
+            return findNextRec(root.left,val);
+        }
         return root;
     }
 
     // Find the next smallest value
     public static TreeNode findPrevRec(TreeNode root, int val) {
+        if(root.right == null) {
+            if(root.val > val) {
+                return root;
+            } else if(root.left != null) {
+                return findPrevRec(root.left,val);
+            }
+        } else {
+            if(root.right.val > val && root.left != null) {
+                return findPrevRec(root.left,val);
+            } else {
+                return findPrevRec(root.right,val);
+            }
+        }
         return root;
     }
 
@@ -287,12 +314,5 @@ public class AVLRecursive {
         } else{
             return searchValRec(root.right, search);
         }
-    }
-    
-    // Helper to swap two nodes
-    private static void swap(TreeNode a, TreeNode b) {
-        int temp = a.val;
-        a.val = b.val;
-        b.val = temp;
     }
 }

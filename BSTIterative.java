@@ -148,10 +148,10 @@ public class BSTIterative {
             TreeNode larger = findNextIter(curr,val);
             // swap if possible
             if(smaller != null) {
-                swap(curr,smaller);
+                TreeNode.swap(curr,smaller);
                 curr = smaller;
             } else if(larger != null){
-                swap(curr,larger);
+                TreeNode.swap(curr,larger);
                 curr = larger;
             }
         }
@@ -249,14 +249,6 @@ public class BSTIterative {
             }
         }
         return curr;
-    }
-
-    // helper function to swap two nodes' values
-    // it effectively swaps both nodes without using pointer shenanigans
-    private static void swap(TreeNode a, TreeNode b) {
-        int temp = b.val;
-        b.val = a.val;
-        a.val = temp;
     }
 
     // helper function to print the values in the tree

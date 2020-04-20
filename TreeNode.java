@@ -17,5 +17,12 @@ public class TreeNode {
         val = v;
         parent = p;
         height = 1;
-    }   
+    }
+    
+    // helper function to swap two nodes
+    public static void swap(TreeNode a, TreeNode b) {
+        int temp = a.val;
+        a.val = b.val;
+        b.val = temp;
+    }
 }

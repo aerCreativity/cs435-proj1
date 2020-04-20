@@ -152,7 +152,7 @@ public class BSTRecursive {
             } else if(findNextRec(root,val) != val) {
                 toSwap = searchValRec(root,findNextRec(root,val));
             }
-            swap(root,toSwap);
+            TreeNode.swap(root,toSwap);
             deleteRec(toSwap, val);
             return;
         }
@@ -268,14 +268,6 @@ public class BSTRecursive {
         } else{
             return(searchValRec(root.right, val));
         }
-    }
-
-    // helper function to swap two nodes' values
-    // it effectively swaps both nodes without using pointer shenanigans
-    private static void swap(TreeNode a, TreeNode b) {
-        int temp = b.val;
-        b.val = a.val;
-        a.val = temp;
     }
 
     // recursive function to print all values in the tree

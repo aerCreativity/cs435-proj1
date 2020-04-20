@@ -92,10 +92,10 @@ public class AVLIterative {
             TreeNode larger = findNextIter(curr,val);
             // swap if possible
             if(smaller != null) {
-                swap(curr,smaller);
+                TreeNode.swap(curr,smaller);
                 curr = smaller;
             } else if(larger != null){
-                swap(curr,larger);
+                TreeNode.swap(curr,larger);
                 curr = larger;
             }
         }
@@ -330,12 +330,5 @@ public class AVLIterative {
             root.bf = 0;
             root.height = 1;
         }
-    }
-
-    // Helper to swap two nodes
-    private static void swap(TreeNode a, TreeNode b) {
-        int temp = a.val;
-        a.val = b.val;
-        b.val = temp;
     }
 }
